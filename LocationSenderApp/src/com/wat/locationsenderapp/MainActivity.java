@@ -13,6 +13,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -25,12 +29,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.wat.locationsenderapp.DetektorPrzeciazenia.OnShakeListener;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SensorEventListener {
 	// Logger logger = ;
+	
+	Sensor accelerometer;
+	SensorManager sensorManager;
+	
+//	private SensorManager mSensorManager;
+//	private Sensor mAccelerometer;
+//	private DetektorPrzeciazenia mShakeDetector;
+//	
+	TextView acceleration;
 	
 	LocationManager lm;
 	static double longitude = 0.0;
@@ -48,6 +63,40 @@ public class MainActivity extends Activity {
 			StrictMode.setThreadPolicy(policy);
 		}
 		
+		int i = 2;
+		
+		//Obs³uga sensora pomiaru przypieszenia
+		
+		sensorManager= (SensorManager)getSystemService(SENSOR_SERVICE);
+		accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		sensorManager.registerListener(this, accelerometer, i);
+		
+		acceleration = (TextView)findViewById(R.id.acceleration);
+		
+		
+		//Druga wersja
+		
+//		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+//		mAccelerometer = mSensorManager
+//				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//		mShakeDetector = new DetektorPrzeciazenia();
+//		mShakeDetector.setOnShakeListener(new OnShakeListener() {
+// 
+//			@Override
+//			public void onShake(int count) {
+//				/*
+//				 * The following method, "handleShakeEvent(count):" is a stub //
+//				 * method you would use to setup whatever you want done once the
+//				 * device has been shook.
+//				 */
+//				//handleShakeEvent(count);
+//			System.out.println("acceleration:////////////////////");
+//				acceleration.setText("Przeciazenie: "+mShakeDetector.gForce);
+//			}
+//		
+//		});
+//		mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+//		
 		// Przygotowanie filtru adresu IP
 		
 		InputFilter[] filters = new InputFilter[1];
@@ -243,4 +292,18 @@ public class MainActivity extends Activity {
 
 		}
 	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		
+		acceleration.setText("X: "+ event.values[0] + "Y: "+ event.values[1] +" Z: "+ event.values[2]);
+		
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+		
+	}
 }
+
