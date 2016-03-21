@@ -8,15 +8,34 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.wat.locationsenderapp.MainActivity" >
 
+    <EditText
+        android:id="@+id/ip_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp"
+        android:digits="0123456789."
+        android:ems="10"
+        android:hint="Adres IP"
+        android:imeOptions="actionDone"
+        android:inputType="number|numberDecimal" />
+
     <Button
         android:id="@+id/execButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="62dp"
-        android:layout_toRightOf="@+id/textView1"
+        android:layout_alignLeft="@+id/acceleration"
+        android:layout_below="@+id/ip_address"
+        android:layout_marginTop="34dp"
         android:text="Execute" />
+
+    <TextView
+        android:id="@+id/acceleration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ip_address"
+        android:layout_centerVertical="true"
+        android:text="Siła przeciażenia: " />
 
     <Button
         android:id="@+id/stopButton"
@@ -24,32 +43,18 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/execButton"
         android:layout_alignBottom="@+id/execButton"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="28dp"
+        android:layout_centerHorizontal="true"
         android:text="Stop" />
 
-    <TextView
-        android:id="@+id/acceleration"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/login"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/ip_address"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="24dp"
-        android:text="X: Y: Z:" />
-
-    <EditText
-        android:id="@+id/ip_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/stopButton"
-        android:layout_centerHorizontal="true"
-        android:digits="0123456789."
         android:ems="10"
-        android:inputType="number|numberDecimal" 
-        android:imeOptions="actionDone">
-
-        <requestFocus />
-    </EditText>
+        android:hint="Login"
+        android:imeOptions="actionDone"
+	/>
 
 </RelativeLayout>

@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.FloatMath;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.wat.locationsenderapp.DetektorPrzeciazenia.OnShakeListener;
 
 public class MainActivity extends Activity implements SensorEventListener {
 	// Logger logger = ;
@@ -46,6 +46,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 //	private DetektorPrzeciazenia mShakeDetector;
 //	
 	TextView acceleration;
+	static float gForce;
+	static EditText login;
 	
 	LocationManager lm;
 	static double longitude = 0.0;
@@ -128,6 +130,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		LocationListener ll = new mylocationlistener();
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
 
+		
+		login = (EditText) findViewById(R.id.login);
 		final EditText adrIp = (EditText) findViewById(R.id.ip_address);
 		adrIp.setFilters(filters);
 //		adrIp.addTextChangedListener(new TextWatcher() {
@@ -170,15 +174,23 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			@Override
 			public void onClick(View v) {
-
+				timer = new Timer();
 			
-				timer.scheduleAtFixedRate(new TimerTask() {
+				inicjalizujWysylanieJsonow();
+				/*timer.scheduleAtFixedRate(new TimerTask() {
 					@Override
 					public void run() {
-						execute();
+						 runOnUiThread(new Runnable() //run on ui thread
+		                 {
+		                  public void run() 
+		                  { 
+		                    execute();
+		                  }
+		                  });
+						//execute();
 					}
-				}, 0, 5000);// put here time 1000 milliseconds=1 second
-
+				}, 0, 5000)*/;// put here time 1000 milliseconds=1 second
+			
 			}
 		});
 		stopBtn.setOnClickListener(new OnClickListener() {
@@ -186,7 +198,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void onClick(View v) {
 				timer.cancel();
-				Timer timer = new Timer();
+//				timer.
 
 			}
 		});
@@ -230,12 +242,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 		Location location = new Location();
 		String latitudeString = String.valueOf(latitude);
 		String longitudeString = String.valueOf(longitude);
-	
+		String gForceString = String.valueOf(gForce);
+		String loginString = String.valueOf(login.getText());
+		
+		
 		location.setLatitude(latitudeString);
 		location.setLongitude(longitudeString);
+		location.setgForce(gForceString);
+		location.setLogin(loginString);
+		
 		String jsonResult = gson.toJson(location);
 		makeRequest("http://"+adresIp+":8080/locationListener", jsonResult);
-		 System.out.println( "Adres IP: " + adresIp);
+		 System.out.println( "Adres IP: " + adresIp );
+//		 System.out.println("Caly json: "+location);
 	}
 
 	public static HttpResponse makeRequest(String uri, String json) {
@@ -295,8 +314,18 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+		float xForce = event.values[0];
+		float yForce = event.values[1];
+		float zForce = event.values[2];
 		
-		acceleration.setText("X: "+ event.values[0] + "Y: "+ event.values[1] +" Z: "+ event.values[2]);
+		float gX = xForce / SensorManager.GRAVITY_EARTH;
+		float gY = yForce / SensorManager.GRAVITY_EARTH;
+		float gZ = zForce / SensorManager.GRAVITY_EARTH;
+		
+		//Trzeba ustalic czy trzeba odjac ta 1 . Telefon w spoczynku pokazuje 1.
+		gForce = FloatMath.sqrt(gX * gX + gY * gY + gZ * gZ) - 1;
+		
+		acceleration.setText("sila: " +gForce);
 		
 	}
 
@@ -304,6 +333,21 @@ public class MainActivity extends Activity implements SensorEventListener {
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
 		
+	}
+	public void inicjalizujWysylanieJsonow(){
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				runOnUiThread(new Runnable() //run on ui thread
+				{
+					public void run() 
+					{ 
+						execute();
+					}
+				});
+				//execute();
+			}
+		}, 0,2500);// put here time 1000 milliseconds=1 second
 	}
 }
 

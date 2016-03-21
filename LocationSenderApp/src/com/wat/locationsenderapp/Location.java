@@ -4,10 +4,39 @@ public class Location {
 	
 	private String latitude;
 	private String longitude;
+	private String gForce;
+	private String login;
 	
 	
 	
-	
+	public String getLogin() {
+		return login;
+	}
+
+
+
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+
+
+
+	public String getgForce() {
+		return gForce;
+	}
+
+
+
+
+	public void setgForce(String gForce) {
+		this.gForce = gForce;
+	}
+
+
+
+
 	public Location() {
 		super();
 	}
@@ -15,10 +44,12 @@ public class Location {
 
 
 
-	public Location(String latitude, String longitude) {
+	public Location(String latitude, String longitude, String gForce,String login) {
 		super();
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.gForce = gForce;
+		this.login = login;
 	}
 
 
@@ -41,7 +72,7 @@ public class Location {
 	@Override
 	public String toString() {
 		return "Location [latitude=" + latitude + ", longitude=" + longitude
-				+ "]";
+				+" Login: "+ login + "]";
 	}
 
 
