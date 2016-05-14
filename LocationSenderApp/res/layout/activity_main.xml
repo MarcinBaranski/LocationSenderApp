@@ -36,7 +36,8 @@
         android:layout_alignLeft="@+id/ip_address"
         android:layout_centerVertical="true"
         android:text="Siła przeciażenia: " />
-
+    
+    
     <Button
         android:id="@+id/stopButton"
         android:layout_width="wrap_content"
@@ -56,5 +57,14 @@
         android:hint="Login"
         android:imeOptions="actionDone"
 	/>
+
+    <TextView
+        android:id="@+id/ipExternal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/acceleration"
+        android:layout_marginTop="44dp"
+        android:layout_toLeftOf="@+id/stopButton"
+        android:text="Adres ip domeny: " />
 
 </RelativeLayout>

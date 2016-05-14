@@ -2,6 +2,8 @@ package com.wat.locationsenderapp;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,7 +47,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 //	private Sensor mAccelerometer;
 //	private DetektorPrzeciazenia mShakeDetector;
 //	
-	TextView acceleration;
+	TextView acceleration,ipExternal;
 	static float gForce;
 	static EditText login;
 	
@@ -74,7 +76,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 		sensorManager.registerListener(this, accelerometer, i);
 		
 		acceleration = (TextView)findViewById(R.id.acceleration);
+		ipExternal = (TextView)findViewById(R.id.ipExternal);
 		
+//		getIP();
+		
+	/*	InetAddress address =null;
+		try {
+			address = InetAddress.getByName("www.arrivedsms.ddns.net/hello");
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		String ip = address.getHostAddress(); 
+		//ipExternal.setText(ip);
 		
 		//Druga wersja
 		
@@ -102,7 +116,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		// Przygotowanie filtru adresu IP
 		
 		InputFilter[] filters = new InputFilter[1];
-		filters[0] = new InputFilter() {
+		/*filters[0] = new InputFilter() {
 			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 				if (end > start) {
 					String destTxt = dest.toString();
@@ -123,7 +137,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				}
 				return null;
 			}
-		};
+		};*/
 		
 
 		lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -252,7 +266,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 		location.setLogin(loginString);
 		
 		String jsonResult = gson.toJson(location);
-		makeRequest("http://"+adresIp+":8080/locationListener", jsonResult);
+		makeRequest("http://arrivedsms.no-ip.org:80/locationListener", jsonResult);
+//		makeRequest("http://arrivedsms.ddns.net:8080/locationListener", jsonResult);
+		
+		
+		//makeRequest("http://"+adresIp+":8080/locationListener", jsonResult);  //tab bylo przed no-ip
 		 System.out.println( "Adres IP: " + adresIp );
 //		 System.out.println("Caly json: "+location);
 	}
@@ -282,6 +300,44 @@ public class MainActivity extends Activity implements SensorEventListener {
 //		return matcher.matches();
 //	}
 
+	
+	
+public void getIP() {
+
+         
+
+        try {
+
+             
+
+            InetAddress inetAddr = InetAddress.getByName("arrivedsms.no-ip.org/hello");
+            byte[] addr = inetAddr.getAddress();
+          // Convert to dot representation
+
+            String ipAddr = "";
+
+            for (int i = 0; i < addr.length; i++) {
+
+                if (i > 0) {
+
+                    ipAddr += ".";
+                }
+                ipAddr += addr[i] & 0xFF;
+            }
+             
+            ipExternal.setText(ipAddr);
+//            System.out.println("IP Address: " + ipAddr);
+        }
+
+        catch (UnknownHostException e) {
+            System.out.println("Host not found: " + e.getMessage());
+        }
+    }
+
+	
+	
+	
+	
 	private class mylocationlistener implements LocationListener {
 
 		@Override
@@ -347,7 +403,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				});
 				//execute();
 			}
-		}, 0,2500);// put here time 1000 milliseconds=1 second
+		}, 0,10000);// put here time 1000 milliseconds=1 second
 	}
 }
 
