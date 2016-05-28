@@ -28,14 +28,6 @@
         android:layout_below="@+id/ip_address"
         android:layout_marginTop="34dp"
         android:text="Execute" />
-
-    <TextView
-        android:id="@+id/acceleration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ip_address"
-        android:layout_centerVertical="true"
-        android:text="Siła przeciażenia: " />
     
     
     <Button
@@ -59,12 +51,22 @@
 	/>
 
     <TextView
-        android:id="@+id/ipExternal"
+        android:id="@+id/gZaSekunde"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/acceleration"
         android:layout_below="@+id/acceleration"
-        android:layout_marginTop="44dp"
-        android:layout_toLeftOf="@+id/stopButton"
-        android:text="Adres ip domeny: " />
+        android:layout_marginTop="14dp"
+        android:text="G za sekundę: " />
+
+    <TextView
+        android:id="@+id/acceleration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ip_address"
+        android:layout_below="@+id/execButton"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="17dp"
+        android:text="Siła przeciażenia: " />
 
 </RelativeLayout>

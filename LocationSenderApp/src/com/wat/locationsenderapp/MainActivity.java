@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,9 +48,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 //	private Sensor mAccelerometer;
 //	private DetektorPrzeciazenia mShakeDetector;
 //	
-	TextView acceleration,ipExternal;
+	final float gForceTab[]=new float[33];
+	TextView acceleration,ipExternal,gZaSek;
 	static float gForce;
+	static float sredniaZaSekunde;
 	static EditText login;
+	float sumaTab=0;
+	int p=0;
 	
 	LocationManager lm;
 	static double longitude = 0.0;
@@ -67,7 +72,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			StrictMode.setThreadPolicy(policy);
 		}
 		
-		int i = 2;
+		int i = 33334;
 		
 		//Obs³uga sensora pomiaru przypieszenia
 		
@@ -76,8 +81,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		sensorManager.registerListener(this, accelerometer, i);
 		
 		acceleration = (TextView)findViewById(R.id.acceleration);
-		ipExternal = (TextView)findViewById(R.id.ipExternal);
-		
+		//ipExternal = (TextView)findViewById(R.id.ipExternal);
+		gZaSek = (TextView)findViewById(R.id.gZaSekunde);
 //		getIP();
 		
 	/*	InetAddress address =null;
@@ -256,7 +261,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		Location location = new Location();
 		String latitudeString = String.valueOf(latitude);
 		String longitudeString = String.valueOf(longitude);
-		String gForceString = String.valueOf(gForce);
+		//bylo gForce zmienione na sredniazajednasekunde
+		String gForceString = String.valueOf(sredniaZaSekunde);
 		String loginString = String.valueOf(login.getText());
 		
 		
@@ -303,40 +309,25 @@ public class MainActivity extends Activity implements SensorEventListener {
 	
 	
 public void getIP() {
-
-         
-
-        try {
-
-             
-
+        try {        
             InetAddress inetAddr = InetAddress.getByName("arrivedsms.no-ip.org/hello");
             byte[] addr = inetAddr.getAddress();
           // Convert to dot representation
 
             String ipAddr = "";
-
             for (int i = 0; i < addr.length; i++) {
-
                 if (i > 0) {
-
                     ipAddr += ".";
                 }
                 ipAddr += addr[i] & 0xFF;
-            }
-             
+            } 
             ipExternal.setText(ipAddr);
 //            System.out.println("IP Address: " + ipAddr);
         }
-
         catch (UnknownHostException e) {
             System.out.println("Host not found: " + e.getMessage());
         }
     }
-
-	
-	
-	
 	
 	private class mylocationlistener implements LocationListener {
 
@@ -344,15 +335,11 @@ public void getIP() {
 		public void onLocationChanged(android.location.Location location) {
 			latitude = location.getLatitude();
 			longitude = location.getLongitude();
-
 		}
-
-		
 		
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 			// TODO Auto-generated method stub
-
 		}
 
 		@Override
@@ -364,7 +351,6 @@ public void getIP() {
 		@Override
 		public void onProviderDisabled(String provider) {
 			// TODO Auto-generated method stub
-
 		}
 	}
 
@@ -380,7 +366,35 @@ public void getIP() {
 		
 		//Trzeba ustalic czy trzeba odjac ta 1 . Telefon w spoczynku pokazuje 1.
 		gForce = FloatMath.sqrt(gX * gX + gY * gY + gZ * gZ) - 1;
+//		float gForceTab[];
+	
 		
+//		for(int p=0;p<31;p++){
+			sredniaZaSekunde = 0;
+			gForceTab[p]= FloatMath.sqrt(gX * gX + gY * gY + gZ * gZ) - 1;
+			p++;
+//			sumaTab = sumaTab + gForceTab[p];
+		
+//		}
+		
+/*		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				runOnUiThread(new Runnable() //run on ui thread
+				{
+					public void run() 
+					{ 						
+						
+						
+					}
+				});
+				//execute();
+			}
+		}, 0,1000);
+		*/
+		if(p>30){
+			p=0;
+		}
 		acceleration.setText("sila: " +gForce);
 		
 	}
@@ -398,12 +412,24 @@ public void getIP() {
 				{
 					public void run() 
 					{ 
+						
+						float suma=0;
+						for(int t = gForceTab.length-1 ; t>1;t--){
+							suma=gForceTab[t]+suma;
+						}
+						sredniaZaSekunde = suma/30;
+//						
+//						DecimalFormat form = new DecimalFormat("0.00000");
+//						String FormattedText=form.format(sredniaZaSekunde);
+						
+						gZaSek.setText("G za sekunde: " + sredniaZaSekunde);
+						sumaTab = 0;
 						execute();
 					}
 				});
 				//execute();
 			}
-		}, 0,10000);// put here time 1000 milliseconds=1 second
+		}, 0,3500);// put here time 1000 milliseconds=1 second
 	}
 }
 

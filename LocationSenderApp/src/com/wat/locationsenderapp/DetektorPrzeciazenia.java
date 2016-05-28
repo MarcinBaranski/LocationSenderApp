@@ -1,4 +1,4 @@
-package com.wat.locationsenderapp;
+/*package com.wat.locationsenderapp;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -77,3 +77,4 @@ public class DetektorPrzeciazenia implements SensorEventListener {
 	
 
 }
+*/
